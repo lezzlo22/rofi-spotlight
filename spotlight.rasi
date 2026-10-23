@@ -44,7 +44,7 @@ entry { font: "sans-serif 18"; }
 entry { placeholder: "Search apps, windows and files  ·  Ctrl+Tab: deep file search"; }
 listview { lines: 8; scrollbar: false; fixed-height: true; border: 0; spacing: 2px; padding: 0; }
 element { text-color: @fg; padding: 8px 10px; spacing: 12px; border: 0; border-radius: 8px; }
-element selected { background-color: @accent; }
+element selected { background-color: @accent; text-color: @sel-fg; }
 element-icon { size: 28px; background-color: transparent; }
 element-text { text-color: inherit; vertical-align: 0.5; highlight: bold; }
 textbox { text-color: @fg-dim; padding: 4px 10px; }
