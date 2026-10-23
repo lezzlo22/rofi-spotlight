@@ -1,0 +1,47 @@
+configuration {
+    modes: "combi,files:/home/lesley/.config/rofi/scripts/files.sh";
+    combi-modes: "web:/home/lesley/.config/rofi/scripts/web.sh,window,drun,quick:/home/lesley/.config/rofi/scripts/files-quick.sh";
+    combi-hide-mode-prefix: true;
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    drun-display-format: "{name}";
+    window-format: "{c}   {t}";
+    font: "Ubuntu 14";
+}
+
+/* Spotlight-style: centered box, big input, few rows */
+* {
+    bg: #1e1e2ef2;
+    bg-alt: #ffffff14;
+    fg: #e6e6ef;
+    fg-dim: #9a9ab0;
+    accent: #4c8dff;
+    background-color: transparent;
+    text-color: @fg;
+    foreground: @fg; background: transparent; separatorcolor: transparent; border-color: transparent;
+    normal-foreground: @fg; alternate-normal-foreground: @fg; active-foreground: @fg; alternate-active-foreground: @fg; urgent-foreground: @fg; alternate-urgent-foreground: @fg;
+    normal-background: transparent; alternate-normal-background: transparent; active-background: transparent; alternate-active-background: transparent; urgent-background: transparent; alternate-urgent-background: transparent;
+    selected-normal-foreground: #ffffff; selected-active-foreground: #ffffff; selected-urgent-foreground: #ffffff;
+    selected-normal-background: @accent; selected-active-background: @accent; selected-urgent-background: @accent;
+}
+window {
+    location: center;
+    anchor: center;
+    width: 680px;
+    background-color: @bg;
+    border: 1px;
+    border-color: #ffffff22;
+    border-radius: 14px;
+}
+mainbox { padding: 10px; spacing: 8px; children: [ inputbar, message, listview ]; }
+inputbar { padding: 10px 12px; spacing: 10px; border-radius: 10px; background-color: @bg-alt; children: [ icon-search, entry ]; }
+icon-search { expand: false; filename: "search"; size: 22px; vertical-align: 0.5; }
+entry { placeholder-color: @fg-dim; text-color: @fg; }
+entry { font: "Ubuntu 18"; }
+entry { placeholder: "Search apps, windows and files  ·  Ctrl+Tab: deep file search"; }
+listview { lines: 8; scrollbar: false; fixed-height: true; }
+element { text-color: @fg; padding: 8px 10px; spacing: 12px; border-radius: 8px; }
+element selected { background-color: @accent; }
+element-icon { size: 28px; }
+element-text { text-color: inherit; vertical-align: 0.5; highlight: bold; }
+textbox { text-color: @fg-dim; padding: 4px 10px; }
