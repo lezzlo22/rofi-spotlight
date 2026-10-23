@@ -1,6 +1,6 @@
-/* Static palette for systems without pywal.
-   `cp colors-wal.rasi.example colors-wal.rasi` (config.rasi imports colors-wal.rasi).
-   Defaults below are Catppuccin Mocha + Mauve. */
+/* Optional palette override. `cp colors-wal.rasi.example colors-wal.rasi` and edit;
+   launch layers it over spotlight.rasi's built-in defaults. (Values below mirror
+   the built-in Catppuccin Mocha + Mauve — change them for a custom static theme.) */
 * {
     bg:     #1e1e2ef2;   /* base, ~95% opaque */
     fg:     #cdd6f4;     /* text */

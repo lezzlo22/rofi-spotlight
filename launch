@@ -1,11 +1,17 @@
 #!/bin/sh
 # Portable, self-contained launcher. rofi doesn't expand ~/$HOME in mode paths,
-# so resolve them from this file's dir. -no-config + -theme keep it fully isolated:
-# it never reads or depends on the user's ~/.config/rofi/config.rasi.
+# so resolve them from this file's dir. -no-config keeps it isolated from the
+# user's global rofi config.
 dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 s="$dir/scripts"
-exec rofi -no-config -show combi \
+
+set -- -no-config -show combi \
     -theme       "$dir/spotlight.rasi" \
     -modes       "combi,files:$s/files.sh" \
-    -combi-modes "web:$s/web.sh,window,drun,quick:$s/files-quick.sh" \
-    "$@"
+    -combi-modes "web:$s/web.sh,window,drun,quick:$s/files-quick.sh"
+
+# Optional palette override, layered on spotlight.rasi's built-in Catppuccin
+# defaults: a colors-wal.rasi (pywal symlink, or a custom copy). Absent = defaults.
+[ -f "$dir/colors-wal.rasi" ] && set -- "$@" -theme-str "$(cat "$dir/colors-wal.rasi")"
+
+exec rofi "$@"
