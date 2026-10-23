@@ -1,0 +1,9 @@
+/* Static palette for systems without pywal.
+   `cp colors-wal.rasi.example colors-wal.rasi` (config.rasi imports colors-wal.rasi).
+   Defaults below are Catppuccin Mocha + Mauve. */
+* {
+    bg:     #1e1e2ef2;   /* base, ~95% opaque */
+    fg:     #cdd6f4;     /* text */
+    accent: #cba6f7;     /* mauve */
+    sel-fg: #1e1e2e;     /* text on selection */
+}

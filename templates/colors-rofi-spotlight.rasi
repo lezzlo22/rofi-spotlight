@@ -1,0 +1,9 @@
+/* pywal template -> ~/.cache/wal/colors-rofi-spotlight.rasi on every `wal` run.
+   Copy to ~/.config/wal/templates/ and symlink ~/.config/rofi/colors-wal.rasi to
+   the generated file. Edit the color indices below to taste (0-15, background, foreground). */
+* {
+    bg:     {background}f2;   /* base, ~95% opaque for a frosted look (needs a compositor) */
+    fg:     {foreground};
+    accent: {color4};         /* selection / highlight; try color1..color6 for a different pop */
+    sel-fg: {background};     /* text on the accent-colored selection */
+}
