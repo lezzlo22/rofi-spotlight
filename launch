@@ -1,10 +1,11 @@
 #!/bin/sh
-# Portable launcher. rofi doesn't expand ~/$HOME in mode paths, so resolve the
-# scripts dir from this file's own location and pass the modes on the CLI.
-# Bind your WM/DE hotkey to this file.
+# Portable, self-contained launcher. rofi doesn't expand ~/$HOME in mode paths,
+# so resolve them from this file's dir. -no-config + -theme keep it fully isolated:
+# it never reads or depends on the user's ~/.config/rofi/config.rasi.
 dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 s="$dir/scripts"
-exec rofi -show combi \
+exec rofi -no-config -show combi \
+    -theme       "$dir/spotlight.rasi" \
     -modes       "combi,files:$s/files.sh" \
     -combi-modes "web:$s/web.sh,window,drun,quick:$s/files-quick.sh" \
     "$@"

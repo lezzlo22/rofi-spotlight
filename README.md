@@ -1,6 +1,6 @@
 # rofi-spotlight
 
-Spotlight-style launcher built on plain [rofi](https://github.com/davatorium/rofi) (rofi 1.7.5+). No extra packages, no WM lock-in.
+Spotlight-style launcher built on plain [rofi](https://github.com/davatorium/rofi) (rofi 1.7.5+). No extra packages, no WM lock-in, and **fully self-contained** — it never reads or overwrites your `~/.config/rofi/config.rasi`, so other rofi-based tools (volume menus, calendars, etc.) keep working untouched.
 
 One box: open windows, apps, then everyday files as you type. Text that matches nothing + Enter → web search (or opens it directly if it looks like a URL).
 
@@ -14,10 +14,12 @@ One box: open windows, apps, then everyday files as you type. Text that matches 
 
 ## Install
 
+Clone to its **own** directory (not `~/.config/rofi`, so nothing collides):
+
 ```bash
-# 1. put it where rofi looks (or clone elsewhere and symlink ~/.config/rofi -> the clone)
-git clone https://github.com/lezzlo22/rofi-spotlight ~/.config/rofi
-cd ~/.config/rofi
+# 1. clone anywhere standalone
+git clone https://github.com/lezzlo22/rofi-spotlight ~/.config/rofi-spotlight
+cd ~/.config/rofi-spotlight
 ln -sf files.sh scripts/files-quick.sh      # script self-detects its two roles via $0
 
 # 2. colors
@@ -29,19 +31,19 @@ ln -sf ~/.cache/wal/colors-rofi-spotlight.rasi colors-wal.rasi
 # cp colors-wal.rasi.example colors-wal.rasi
 
 # 3. bind a key to the launcher. Examples:
-#   i3:    bindsym $mod+d exec --no-startup-id ~/.config/rofi/launch
-#   sway:  bindsym $mod+d exec ~/.config/rofi/launch
-#   XFCE:  xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>r' -n -t string -s "$HOME/.config/rofi/launch"
+#   i3:    bindsym $mod+d exec --no-startup-id ~/.config/rofi-spotlight/launch
+#   sway:  bindsym $mod+d exec ~/.config/rofi-spotlight/launch
+#   XFCE:  xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Primary><Alt>r' -n -t string -s "$HOME/.config/rofi-spotlight/launch"
 ```
 
-Nothing is hardcoded to a user or home path: `launch` resolves the script paths from its own location at runtime (rofi doesn't expand `~`/`$HOME` in mode paths, so they can't live in `config.rasi`).
+`launch` runs rofi with `-no-config -theme spotlight.rasi`, so it's isolated from the global rofi config and resolves its script paths from its own location at runtime (rofi doesn't expand `~`/`$HOME` in mode paths, so they can't live in a theme file).
 
-**Dependencies:** `rofi`, `python3`, `xdg-utils` (`xdg-open`), `util-linux` (`setsid`), and an icon theme — `Papirus-Dark` by default; change `icon-theme` in `config.rasi` to one you have.
+**Dependencies:** `rofi`, `python3`, `xdg-utils` (`xdg-open`), `util-linux` (`setsid`), and an icon theme — `Papirus-Dark` by default; change `icon-theme` in `spotlight.rasi` to one you have.
 
 ## Files
 
-- `launch`: portable entry point — derives absolute script paths from its own dir and runs `rofi -show combi`. Bind your hotkey to this.
-- `config.rasi`: modes-free options + Spotlight-style theme (centered box). Imports `colors-wal.rasi` for the palette.
+- `launch`: portable, self-contained entry point. Bind your hotkey to this.
+- `spotlight.rasi`: rofi options + Spotlight-style theme. Imports `colors-wal.rasi` for the palette. Loaded only via `launch` (`-theme`), never installed as the global config.
 - `colors-wal.rasi`: the live palette (`@bg`/`@fg`/`@accent`/`@sel-fg`). Normally a symlink to the pywal output; or a copy of `colors-wal.rasi.example`. Git-ignored (per-machine).
 - `templates/colors-rofi-spotlight.rasi`: pywal template → `~/.cache/wal/colors-rofi-spotlight.rasi`. Change the color indices (`color1`..`color6`) for a different accent.
 - `colors-wal.rasi.example`: static fallback palette (Catppuccin Mocha + Mauve) for non-pywal setups.
@@ -50,7 +52,7 @@ Nothing is hardcoded to a user or home path: `launch` resolves the script paths 
 
 ## Notes / gotchas
 
-- Fonts use the generic `sans-serif` alias → whatever your system's default sans is. Change `font` in `config.rasi` for a specific face.
+- Fonts use the generic `sans-serif` alias → whatever your system's default sans is. Change `font` in `spotlight.rasi` for a specific face.
 - The frosted `bg` alpha only shows with a running compositor (picom, etc.); without one it renders opaque.
 - rofi loads **every** mode at startup, so the deep tab only shows a "Load all files" entry until Enter — otherwise the main box takes ~0.7s to open.
 - Keep `listview { fixed-height: true; }`; with `false` rofi measures every row (1.7s with many files).
