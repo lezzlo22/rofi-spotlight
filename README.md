@@ -2,13 +2,15 @@
 
 Spotlight-style launcher built on plain [rofi](https://github.com/davatorium/rofi) (rofi 1.7.5+). No extra packages, no WM lock-in, **themed out of the box** (Catppuccin Mocha), and **fully self-contained** — it never reads or overwrites your `~/.config/rofi/config.rasi`, so other rofi-based tools (volume menus, calendars, etc.) keep working untouched.
 
-One box: open windows, apps, then everyday files as you type. Text that matches nothing + Enter → web search (or opens it directly if it looks like a URL).
+One box: open windows, apps, then everyday files as you type. Text that matches nothing + Enter → calculate, open a web/file URL, or search the web.
 
 | Key | Does |
 |---|---|
 | type | filter windows, apps, files (~9k entries, up to 5 folders deep under `~`) |
 | Enter | open the highlighted result |
-| Ctrl+Enter | web search the typed text even if something matches |
+| Ctrl+Enter | process the typed text (calculation, URL, or web search) even if something matches |
+| `12*7+3` or `= (10+5)/3` → Enter | show the result; select it and press Enter to copy |
+| `example.com`, `http://localhost:3000`, or `file:///home/you/report.pdf` → Enter | open directly in the default browser/app |
 | Ctrl+Tab → Enter → type | deep search: every file under `~` (~127k, takes ~2s to load) |
 | `!f` / `!d` / `!wi` prefix | only files / apps / windows |
 
@@ -40,6 +42,10 @@ ln -sf ~/.cache/wal/colors-rofi-spotlight.rasi colors-wal.rasi
 
 **Dependencies:** `rofi`, `python3`, `xdg-utils` (`xdg-open`), `util-linux` (`setsid`), and an icon theme — `Papirus-Dark` by default; change `icon-theme` in `spotlight.rasi` to one you have.
 
+Calculator copying additionally uses `xclip` (optional; results still display without it). Calculations support parentheses, decimals, scientific notation, `+`, `-`, `*`, `/`, `//`, `%`, and `^` or `**` (power). A trailing `%` divides the preceding number or parenthesized expression by 100: `50%` → `0.5`, `200*10%` → `20`, `(10+5)%` → `0.15`. Adding or subtracting a percentage applies it to the value on the left: `50-10%` → `45`, `200+10%` → `220`. Successive changes apply in order: `50-10%-10%` → `40.5`. Multiplication and division use the percentage as a fraction. When followed by a number or opening parenthesis, `%` still means remainder (`10%3` → `1`); parenthesize negative divisors (`10%(-3)`). Prefix with `=` to explicitly request a calculation. Results appear after submitting input, not on each keystroke. Expressions are parsed as arithmetic only, with size and exponent limits; errors stay in the launcher.
+
+Web addresses without a scheme use HTTPS; specify `http://` for local HTTP servers. Local paths starting with `/`, `~/`, `./`, or `../` open in the default app, including paths with spaces or surrounding quotes. Relative paths use the launcher's working directory. Local file URLs accept spaces or percent-encoded paths, including `file:/...`, `file:///...`, and `file://localhost/...`. Other text and URI schemes are searched with DuckDuckGo.
+
 ## Files
 
 - `launch`: portable, self-contained entry point. Bind your hotkey to this.
@@ -48,7 +54,8 @@ ln -sf ~/.cache/wal/colors-rofi-spotlight.rasi colors-wal.rasi
 - `templates/colors-rofi-spotlight.rasi`: pywal template → `~/.cache/wal/colors-rofi-spotlight.rasi`. Change the color indices (`color1`..`color6`) for a different accent.
 - `colors-wal.rasi.example`: a ready-to-edit override palette (defines the 4 vars); copy to `colors-wal.rasi` and tweak for a custom static theme.
 - `scripts/files.sh`: file list mode. As `files-quick.sh` (symlink) it lists everyday files for the main box; as `files.sh` it's the lazy deep-search tab.
-- `scripts/web.sh`: receives unmatched text → opens URL or Google search in the default browser.
+- `scripts/web.sh`: entry point for the combined mode's custom input handler.
+- `scripts/actions.py`: calculates expressions, opens web URLs and local files, or falls back to DuckDuckGo search.
 
 ## Notes / gotchas
 
@@ -60,3 +67,5 @@ ln -sf ~/.cache/wal/colors-rofi-spotlight.rasi colors-wal.rasi
 - Rofi's theme parser misreads a quoted string followed by another quoted value in the same block, so `entry` properties are split over several blocks.
 - Opening uses `xdg-open`; a file type with no default app opens nothing (`xdg-mime default <app>.desktop <mime>`).
 - The `src`/`lib`/`jdk*`/`netbeans*` prune names in `files.sh` just trim noise; harmless if you don't have them.
+
+Run the input-handler checks with `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -p 'test_*.py'`.
